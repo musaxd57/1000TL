@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ödeme Sayfası - Premium Paket (1000 TL)</title>
+    <title>Ödeme Sayfası - 1000 TL Premium Paket</title>
+    <link rel="stylesheet" href="style.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,6 +25,13 @@
 
         h2 {
             text-align: center;
+        }
+
+        .package-info {
+            text-align: center;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #333;
         }
 
         form {
@@ -74,55 +82,67 @@
             background-color: #E68900;
         }
 
-        .success {
-            color: green;
-            text-align: center;
-            font-weight: bold;
+        .loading-spinner {
             display: none;
+            margin-top: 20px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        .success-check {
+            display: none;
+            font-size: 50px;
+            color: green;
+            margin: 20px 0;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="payment-container">
         <div class="alert" id="alertBox">Lütfen geçerli bilgiler girin!</div>
-        <h2>Premium Paket (1000 TL) Ödeme Bilgilerini Girin</h2>
-        <form onsubmit="return validateForm()">
-            <!-- Paket İsim ve Fiyat -->
-            <h3>Premium Paket - 1000 TL</h3>
+        <h2>Ödeme Bilgilerinizi Girin</h2>
+        <div class="package-info">1000 TL Premium Paket</div> <!-- Paket adı ve fiyatı güncellendi -->
+        <form id="paymentForm" onsubmit="return validateForm()">
+            <!-- Paket bilgisi gizli alan olarak eklendi ve fiyat 1000 TL yapıldı -->
+            <input type="hidden" id="package" value="1000"> <!-- Paket bilgisi gizli alan olarak eklendi -->
 
-            <!-- E-Posta -->
-            <label for="email">E-Posta</label>
+            <label>E-Posta</label>
             <input type="email" id="email" placeholder="example@mail.com" required>
             <span class="error" id="emailError">Geçerli bir e-posta girin.</span>
-
-            <!-- Telefon Numarası -->
-            <label for="phone">Telefon Numarası</label>
+            
+            <label>Telefon Numarası</label>
             <input type="tel" id="phone" placeholder="05XX XXX XX XX" required>
             <span class="error" id="phoneError">Geçerli bir telefon numarası girin.</span>
 
-            <!-- Kart Numarası -->
-            <label for="card">Kart Numarası</label>
+            <label>Kart Numarası</label>
             <input type="text" id="card" placeholder="1234 5678 9101 1121" maxlength="16" required>
             <span class="error" id="cardError">Geçerli bir 16 haneli kart numarası girin.</span>
 
-            <!-- Son Kullanma Tarihi -->
-            <label for="expiry">Son Kullanma Tarihi</label>
+            <label>Son Kullanma Tarihi</label>
             <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" required>
             <span class="error" id="expiryError">Geçerli bir son kullanma tarihi girin.</span>
 
-            <!-- CVV -->
-            <label for="cvv">CVV</label>
+            <label>CVV</label>
             <input type="password" id="cvv" placeholder="123" maxlength="3" required>
             <span class="error" id="cvvError">Geçerli bir 3 haneli CVV girin.</span>
 
-            <!-- Ad Soyad -->
-            <label for="name">Ad Soyad</label>
+            <label>Ad Soyad</label>
             <input type="text" id="name" placeholder="Kart Üzerindeki Ad Soyad" required>
 
-            <!-- Ödeme Butonu -->
             <button type="submit">Ödemeyi Tamamla</button>
-            <div class="success" id="successMessage">Ödeme Başarılı! ✔️</div>
         </form>
+
+        <div class="loading-spinner" id="loadingSpinner"></div>
+        <div class="success-check" id="successCheck">&#10004;</div>
     </div>
 
     <script>
@@ -152,9 +172,17 @@
                 isValid = false;
             } else {
                 document.getElementById("alertBox").style.display = "none";
-                document.getElementById("successMessage").style.display = "block"; // Success message shown
             }
-            
+
+            if (isValid) {
+                // Loading Spinner'ı gösteriyoruz
+                document.getElementById("loadingSpinner").style.display = "block";
+                // Ödeme başarılı olduğunda
+                setTimeout(() => {
+                    document.getElementById("loadingSpinner").style.display = "none";
+                    document.getElementById("successCheck").style.display = "block";
+                }, 2000); // 2 saniye sonra başarı işareti
+            }
             return isValid;
         }
     </script>
